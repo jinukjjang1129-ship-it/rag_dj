@@ -1,0 +1,22 @@
+{
+  "python": "3.12.14",
+  "packages": {
+    "torch": "2.15.0+cpu",
+    "sentence-transformers": "6.2.0",
+    "transformers": "5.22.2",
+    "chromadb": "1.5.9",
+    "langchain-chroma": "1.1.0",
+    "langchain-huggingface": "1.2.3",
+    "langchain-ollama": "1.1.0",
+    "pypdf": "7.0.1",
+    "streamlit": "1.67.0",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3"
+  },
+  "embedding_model": "jhgan/ko-sroberta-multitask",
+  "cached_model_revisions": [
+    "8fca7c9c98c26599be0e14b9916b11a756a26f19"
+  ],
+  "llm_status": "Ollama localhost:11434 connection refused; generation not measured",
+  "neo4j_status": "Read-only connection attempted using original configuration; ServiceUnavailable; no writes"
+}

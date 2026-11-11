@@ -1,0 +1,13 @@
+{
+  "tracks": 21,
+  "all_nine_fields": 20,
+  "missing_headcount": 1,
+  "incomplete_tracks": [
+    {
+      "name": "학생부교과(지역의사선발전형-천안권, 공주권, 서산권, 논산권, 홍성권, 광역권)",
+      "missing_fields": [
+        "모집인원"
+      ]
+    }
+  ]
+}
