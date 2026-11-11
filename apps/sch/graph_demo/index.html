@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>순천향대 입시정보 그래프</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/10.1.0/standalone/umd/vis-network.min.js"></script>
+<style>
+  :root {
+    --ink: #16243D;
+    --ink-soft: #2A3B57;
+    --paper: #F6F4EF;
+    --card: #FFFFFF;
+    --slate: #5B6472;
+    --hair: #E4E0D6;
+    --gold: #B8933F;
+    --teal: #2E6F63;
+    --rose: #A85D68;
+    --coral: #D8483F;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  header {
+    flex: none;
+    background: var(--ink);
+    color: #F6F4EF;
+    padding: 22px 32px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  header span {
+    font-size: 13px;
+    color: #B7C0D1;
+  }
+  .layout {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+  }
+  .panel-left {
+    flex: 0 0 380px;
+    background: var(--card);
+    border: 1px solid var(--hair);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    min-height: 0;
+  }
+  .panel-right {
+    flex: 1;
+    min-height: 0;
+    background: var(--card);
+    border: 1px solid var(--hair);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 10px;
+    color: var(--ink-soft);
+  }
+  textarea {
+    width: 100%;
+    resize: none;
+    height: 64px;
+    border: 1px solid var(--hair);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  textarea:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+  button.primary {
+    margin-top: 10px;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button.primary:hover { background: var(--ink-soft); }
+  button.primary:disabled { opacity: 0.5; cursor: default; }
+  .examples { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 20px; }
+  .chip {
+    font-size: 12.5px;
+    padding: 6px 10px;
+    border: 1px solid var(--hair);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .chip:hover { border-color: var(--gold); color: var(--ink); }
+  .answer-box {
+    margin-top: 4px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border-radius: 10px;
+    border: 1px solid var(--hair);
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    min-height: 60px;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .mode-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+  }
+  .mode-graph { background: #EFE6CF; color: #6B5321; }
+  .mode-vector { background: #DCEAE7; color: #1F4E45; }
+  .legend { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--hair); }
+  .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--slate); margin-bottom: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  #network { flex: 1; min-height: 400px; border-radius: 10px; }
+  .loading { color: var(--slate); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>순천향대학교 입시정보 그래프</h1>
+  <span>전형유형 · 세부전형 · 공통안내 · 선발원칙 — Neo4j 기반 GraphRAG 데모</span>
+</header>
+
+<div class="layout">
+  <div class="panel-left">
+    <h2>질문하기</h2>
+    <textarea id="question" placeholder="예: 지역의사전형 정원이 몇 명이야?"></textarea>
+    <button class="primary" id="ask-btn">검색하기</button>
+
+    <div class="examples" id="examples"></div>
+
+    <h2>답변</h2>
+    <div id="answer" class="answer-box">왼쪽에 질문을 입력하고 검색하기를 눌러주세요.</div>
+
+    <div class="legend">
+      <div class="legend-row"><span class="dot" style="background:#A85D68"></span>전형유형</div>
+      <div class="legend-row"><span class="dot" style="background:#B8933F"></span>세부전형</div>
+      <div class="legend-row"><span class="dot" style="background:#2E6F63"></span>공통안내</div>
+      <div class="legend-row"><span class="dot" style="background:#5B6472"></span>선발원칙유형</div>
+      <div class="legend-row"><span class="dot" style="background:#D8483F"></span>이번 답변에 사용된 노드</div>
+    </div>
+  </div>
+
+  <div class="panel-right">
+    <div id="graph-status" class="loading" style="padding: 8px 4px;">그래프 불러오는 중...</div>
+    <div id="network"></div>
+  </div>
+</div>
+
+<script>
+const EXAMPLES = [
+  "교과전형에는 뭐가 있어?",
+  "SW전형 모집인원이 몇 명이야?",
+  "학생부교과 계열 전형 정원 알려줘",
+  "농어촌전형 지원자격이 궁금해요",
+  "전형료는 얼마인가요?",
+];
+
+const LABEL_COLOR = {
+  "전형유형": "#A85D68",
+  "세부전형": "#B8933F",
+  "공통안내": "#2E6F63",
+  "선발원칙유형": "#5B6472",
+};
+
+let network, allNodes, allEdges;
+
+function renderExamples() {
+  const box = document.getElementById("examples");
+  EXAMPLES.forEach(q => {
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.textContent = q;
+    chip.onclick = () => { document.getElementById("question").value = q; ask(); };
+    box.appendChild(chip);
+  });
+}
+
+async function loadGraph() {
+  const status = document.getElementById("graph-status");
+  try {
+    if (typeof vis === "undefined") {
+      status.textContent = "그래프 라이브러리(vis-network)를 불러오지 못했습니다. 네트워크/방화벽 문제일 수 있습니다.";
+      status.style.color = "#D8483F";
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const res = await fetch("/graph", { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      status.textContent = `그래프 조회 실패 (HTTP ${res.status}). 서버 콘솔의 에러 메시지를 확인하세요.`;
+      status.style.color = "#D8483F";
+      return;
+    }
+    if (!res.ok) throw new Error(`요청 실패 (${res.status})`);
+    const data = await res.json();
+    if (!data.nodes || data.nodes.length === 0) {
+      status.textContent = "그래프에 노드가 없습니다. build_admission_graph.py를 먼저 실행했는지 확인하세요.";
+      status.style.color = "#D8483F";
+      return;
+    }
+
+    const nodesData = data.nodes.map(n => ({
+      id: n.id,
+      label: (n.title || "").slice(0, 16),
+      title: n.title,
+      color: {
+        background: LABEL_COLOR[n.label] || "#999",
+        border: LABEL_COLOR[n.label] || "#999",
+        highlight: { background: LABEL_COLOR[n.label] || "#999", border: "#D8483F" },
+      },
+      // shape: "dot"이면 vis-network가 라벨을 노드 밖(아래)에 따로 그려서,
+      // 노드가 많이 몰리면 흰 글씨가 서로 겹쳐 둥둥 떠다니는 것처럼 보인다.
+      // "box"는 라벨이 노드 안에 들어가고 노드 크기가 텍스트에 맞춰 자동
+      // 조절돼서, 이 문제가 사라진다.
+      shape: "box",
+      margin: { top: 8, right: 10, bottom: 8, left: 10 },
+      font: { color: "#fff", size: 11, face: "Noto Sans KR" },
+      borderWidth: 1,
+    }));
+    const edgesData = data.edges.map(e => ({
+      id: e.id, from: e.source, to: e.target, label: e.relationship,
+      arrows: "to", color: { color: "#C9C4B6" }, font: { size: 9, color: "#8A8477", strokeWidth: 0 },
+    }));
+
+    allNodes = new vis.DataSet(nodesData);
+    allEdges = new vis.DataSet(edgesData);
+
+    network = new vis.Network(
+      document.getElementById("network"),
+      { nodes: allNodes, edges: allEdges },
+      {
+        physics: { stabilization: true, barnesHut: { gravitationalConstant: -4000, springLength: 130 } },
+        interaction: { hover: true },
+      }
+    );
+
+    // vis-network가 생성 시점에 컨테이너 크기를 0으로 잘못 읽는 경우가 있어서,
+    // 레이아웃이 확정된 뒤(약간의 지연 후) 강제로 다시 그리게 한다.
+    setTimeout(() => { network.redraw(); network.fit(); }, 200);
+    window.addEventListener("resize", () => network.redraw());
+
+    status.textContent = `노드 ${data.nodes.length}개, 관계 ${data.edges.length}개 로딩 완료`;
+    status.style.color = "";
+    setTimeout(() => { status.style.display = "none"; }, 2000);
+  } catch (e) {
+    if (e.name === "AbortError") {
+      status.textContent = "그래프 조회가 10초 넘게 응답이 없습니다. 서버(Neo4j 연결)를 확인하세요.";
+    } else {
+      status.textContent = "그래프 로딩 중 오류: " + e.message;
+    }
+    status.style.color = "#D8483F";
+  }
+}
+
+function highlight(usedNodeIds) {
+  if (!allNodes) return;
+  const updates = allNodes.get().map(n => {
+    const isUsed = usedNodeIds.includes(n.id);
+    return {
+      id: n.id,
+      borderWidth: isUsed ? 4 : 1,
+      color: {
+        background: n.color.background,
+        border: isUsed ? "#D8483F" : n.color.background,
+      },
+    };
+  });
+  allNodes.update(updates);
+}
+
+async function ask() {
+  const question = document.getElementById("question").value.trim();
+  if (!question) return;
+
+  const btn = document.getElementById("ask-btn");
+  const answerBox = document.getElementById("answer");
+  btn.disabled = true;
+  answerBox.innerHTML = '<span class="loading">검색 중...</span>';
+
+  try {
+    const res = await fetch("/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
+    if (!res.ok) throw new Error(`요청 실패 (${res.status})`);
+    const data = await res.json();
+
+    const tagClass = data.mode === "graph" ? "mode-graph" : "mode-vector";
+    const tagText = data.mode === "graph" ? "그래프 조회" : "벡터검색";
+    const tag = document.createElement("span");
+    tag.className = `mode-tag ${tagClass}`;
+    tag.textContent = tagText;
+    const body = document.createElement("div");
+    body.textContent = data.answer || "답변을 확인할 수 없습니다.";
+    const sources = document.createElement("div");
+    const citations = (data.sources || []).map(source => {
+      const meta = source.metadata || source;
+      const pages = meta.pages || (meta.pdf_page ? [meta.pdf_page] : []);
+      return `${meta.source || source.title || "자료"} / PDF 쪽: ${pages.join(", ") || "미기록"}`;
+    });
+    sources.textContent = [...new Set(citations)].join("\n");
+    answerBox.replaceChildren(tag, body, sources);
+
+    highlight(data.used_nodes || []);
+  } catch (e) {
+    answerBox.textContent = "오류가 발생했습니다: " + e;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById("ask-btn").onclick = ask;
+document.getElementById("question").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(); }
+});
+
+renderExamples();
+loadGraph();
+</script>
+
+</body>
+</html>

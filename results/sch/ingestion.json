@@ -1,0 +1,22 @@
+{
+  "department": {
+    "chunks": 147
+  },
+  "paper": {
+    "chunks": 171,
+    "extraction_methods": {
+      "ocr": 49,
+      "text": 122
+    }
+  },
+  "admission": {
+    "chunks": 71
+  },
+  "raw_data_published": false,
+  "original_stored_counts": {
+    "department": 147,
+    "admission": 70,
+    "paper": 334
+  },
+  "notes": "Rebuilt paper uses ordinary text extraction and verified kor+eng OCR. Chunk equality is not assumed."
+}

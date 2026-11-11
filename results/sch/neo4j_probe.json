@@ -1,0 +1,5 @@
+{
+  "writes_performed": false,
+  "status": "connection_failed",
+  "error_type": "ServiceUnavailable"
+}

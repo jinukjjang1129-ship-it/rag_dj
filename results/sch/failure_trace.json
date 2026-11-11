@@ -1,0 +1,10 @@
+{
+  "matched_paper_count": 0,
+  "retrieved": 5,
+  "maximum_score": 77.7,
+  "threshold": 32.0,
+  "expected_file_in_matched": false,
+  "expected_file_in_results": true,
+  "final_in_scope": false,
+  "stage": "before_filename_alias_fix"
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "archive": "dj_rag.zip",
+    "sha256": "cddcf8e78feca3e577cbb880fe113e3fc93241eb909779f9c0d4252acbb0f4f6",
+    "entries": 23
+  },
+  {
+    "archive": "ml_연습.zip",
+    "sha256": "0273b04e6eeb3bb810e8fd5caeac27da8d7be87767ad984e3ba00c3b0ff01d2d",
+    "entries": 11
+  },
+  {
+    "archive": "sch_rag_v2.zip",
+    "sha256": "f47792c5b69ca1abec6b9a9ab26220803585791162b29e92fe40f30ee88eed93",
+    "entries": 35
+  },
+  {
+    "archive": "sch_rag_v3.zip",
+    "sha256": "51c056849b9295329230988dd9a5812391f21f93fb5e78d401a13d707e4e7110",
+    "entries": 78
+  },
+  {
+    "archive": "rag_취업규칙.zip",
+    "sha256": "a74f240c0042a7b638580384e920b22577b761565e17289a1392c1db6baaf285",
+    "entries": 14
+  },
+  {
+    "archive": "dj_rag_local.zip",
+    "sha256": "398549014c96a6707ef4668fecf7bccbd0f0e2d3258de845538005b61a0fa527",
+    "entries": 24
+  }
+]

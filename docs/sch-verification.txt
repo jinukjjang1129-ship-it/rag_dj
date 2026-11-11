@@ -1,0 +1,8 @@
+...................                                                      [100%]
+19 passed in 1.97s
+Ruff passed for apps/sch, evaluation, tests.
+Streamlit browser screenshot: stException count 0.
+Graph frontend fixture: safe text rendering, source pages and missing graph library passed.
+Original-data ingestion passed: department 147, admission 71, paper 171.
+LLM generation accuracy not measured (Ollama connection refused).
+Original Neo4j read-only probe: ServiceUnavailable; no writes.
