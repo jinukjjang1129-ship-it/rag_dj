@@ -1,0 +1,9 @@
+{
+  "targets": 3,
+  "succeeded": 2,
+  "statuses": {
+    "http_error": 1,
+    "ok": 2
+  },
+  "scope": "controlled localhost fixture, not dongjin.com"
+}

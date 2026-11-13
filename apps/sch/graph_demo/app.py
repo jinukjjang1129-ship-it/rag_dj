@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from rag import admission as admission_rag
@@ -41,6 +42,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="순천향대 입시정보 GraphRAG 데모", lifespan=lifespan)
+app.mount(
+    "/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static"
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[],

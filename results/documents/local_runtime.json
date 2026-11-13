@@ -1,0 +1,15 @@
+{
+  "ollama_version": "0.40.16",
+  "native_runtime": "CPU components extracted from official Linux amd64 distribution",
+  "model": "gemma3:4b",
+  "model_layers_bytes": 3350272259,
+  "model_blob_sha256_verified": true,
+  "model_manifest_sha256": "68ceab7e468a31c988b44d5a4984a0e21f58c4f7158c6ce29c1804babac38df7",
+  "serve_executed": true,
+  "generation_evaluation": "completed limited 8-case paired audit with retained intermediate failures; see generation_comparison.json",
+  "blocker": null,
+  "cloud_inference_requested": false,
+  "host_user_home_modified": false,
+  "key_storage": "isolated container state mounted in private workspace",
+  "runtime": "Ollama CPU in local Docker; cloud disabled"
+}

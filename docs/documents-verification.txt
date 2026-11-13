@@ -1,0 +1,10 @@
+38 passed in 2.92s
+Ruff passed.
+Actual private PDF: 38 pages, 96 chunks, repeated ingest count unchanged.
+Provided company pages: 33 chunks, repeated ingest count unchanged.
+Playwright localhost fixture: 2 successful pages (including retry), 1 recorded 404.
+Live target site: robots HTTP403, 19 targets skipped; no collection success claimed.
+Browser: company list and actual private PDF ingestion/query passed; private answer not screenshotted.
+Ollama CPU runtime and official gemma3:4b blobs verified and served in isolated local Docker. Host user home untouched.
+Fresh Neo4j Community 5.26.0: 21 tracks, all source/page properties present; live API list and scalar queries passed.
+Pip dependency check passed after editable metadata refresh. Original ZIP hashes verified again.

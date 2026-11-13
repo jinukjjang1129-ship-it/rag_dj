@@ -1,0 +1,11 @@
+{
+  "targets": 19,
+  "succeeded": 0,
+  "statuses": {
+    "robots_unverified": 19
+  },
+  "robots_http_statuses": [
+    403
+  ],
+  "live_pages_successfully_collected": 0
+}

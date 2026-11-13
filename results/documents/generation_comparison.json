@@ -1,0 +1,263 @@
+{
+  "review_date_kst": "2026-11-13",
+  "reviewer": "AI-assisted source comparison; no independent human grading",
+  "paired_cases": 8,
+  "not_general_accuracy": true,
+  "raw_answers_published": false,
+  "same_questions_and_source_documents": true,
+  "settings": {
+    "model": "gemma3:4b",
+    "temperature": 0,
+    "seed": 42,
+    "num_ctx": 8192,
+    "num_predict": 192,
+    "num_thread": 2
+  },
+  "timing_limitations": "Single requests; model/index load and cache/CPU contention not controlled. Not a speed comparison.",
+  "initial_runtime_errors": [
+    {
+      "case": "company",
+      "version": "legacy",
+      "error": "Ollama HTTP500 unexpected EOF",
+      "seconds": 38.53545084800021,
+      "retry_succeeded": true
+    }
+  ],
+  "intermediate_failures": [
+    "Current hours initially omitted daily hours and cited nonexistent source 2; final citation guard returns evidence instead.",
+    "Current paper before metadata routing repeated incorrect taxonomy and truncated output.",
+    "Application date answers remain truncated at the diagnostic 192-token limit.",
+    "Final company answer cited three valid source indices, but only the first chunk contains the requested founding year."
+  ],
+  "rows": [
+    {
+      "id": "faculty",
+      "legacy": {
+        "review": "incomplete_mixed_list",
+        "seconds": 150.32838266099998,
+        "generation_mode": "legacy_generated",
+        "generation_error": null,
+        "done_reasons": [],
+        "prompt_tokens": [],
+        "output_tokens": []
+      },
+      "final": {
+        "review": "complete_metadata_list",
+        "seconds": 7.9387468999999555,
+        "generation_mode": "deterministic_metadata",
+        "generation_error": null,
+        "done_reasons": [],
+        "prompt_tokens": [],
+        "output_tokens": []
+      }
+    },
+    {
+      "id": "application",
+      "legacy": {
+        "review": "required_dates_match_but_truncated",
+        "seconds": 156.802416284,
+        "generation_mode": "legacy_generated",
+        "generation_error": null,
+        "done_reasons": [],
+        "prompt_tokens": [],
+        "output_tokens": []
+      },
+      "final": {
+        "review": "required_dates_match_but_truncated",
+        "seconds": 150.749019299,
+        "generation_mode": "ollama_truncated",
+        "generation_error": null,
+        "done_reasons": [
+          "length"
+        ],
+        "prompt_tokens": [
+          2513
+        ],
+        "output_tokens": [
+          192
+        ]
+      }
+    },
+    {
+      "id": "fee",
+      "legacy": {
+        "review": "abstained_despite_available_source",
+        "seconds": 39.81862306599999,
+        "generation_mode": "legacy_generated",
+        "generation_error": null,
+        "done_reasons": [],
+        "prompt_tokens": [],
+        "output_tokens": []
+      },
+      "final": {
+        "review": "required_fact_matches_source",
+        "seconds": 96.62555572300016,
+        "generation_mode": "ollama",
+        "generation_error": null,
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          2286
+        ],
+        "output_tokens": [
+          21
+        ]
+      }
+    },
+    {
+      "id": "paper",
+      "legacy": {
+        "review": "incorrect_keyword_answer",
+        "seconds": 198.51832407200004,
+        "generation_mode": "legacy_generated",
+        "generation_error": null,
+        "done_reasons": [],
+        "prompt_tokens": [],
+        "output_tokens": []
+      },
+      "final": {
+        "review": "complete_extracted_keyword_list",
+        "seconds": 15.218657860000008,
+        "generation_mode": "deterministic_metadata",
+        "generation_error": null,
+        "done_reasons": [],
+        "prompt_tokens": [],
+        "output_tokens": []
+      }
+    },
+    {
+      "id": "probation",
+      "legacy": {
+        "review": "required_fact_matches_source",
+        "seconds": 24.88934998899981,
+        "generation_mode": "legacy_generated",
+        "generation_error": null,
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          272
+        ],
+        "output_tokens": [
+          72
+        ]
+      },
+      "final": {
+        "review": "required_fact_matches_source",
+        "seconds": 11.065115867000003,
+        "generation_mode": "generated",
+        "generation_error": null,
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          250
+        ],
+        "output_tokens": [
+          6
+        ]
+      }
+    },
+    {
+      "id": "hours",
+      "legacy": {
+        "review": "abstained_despite_available_source",
+        "seconds": 13.616166652000175,
+        "generation_mode": "legacy_generated",
+        "generation_error": null,
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          234
+        ],
+        "output_tokens": [
+          22
+        ]
+      },
+      "final": {
+        "review": "invalid_citation_detected_extractive_fallback",
+        "seconds": 25.352398013,
+        "generation_mode": "extractive_fallback",
+        "generation_error": "InvalidCitation",
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          394
+        ],
+        "output_tokens": [
+          28
+        ]
+      }
+    },
+    {
+      "id": "holiday",
+      "legacy": {
+        "review": "required_fact_matches_source",
+        "seconds": 29.932040673000074,
+        "generation_mode": "legacy_generated",
+        "generation_error": null,
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          313
+        ],
+        "output_tokens": [
+          54
+        ]
+      },
+      "final": {
+        "review": "required_fact_matches_source",
+        "seconds": 36.57980263799999,
+        "generation_mode": "generated",
+        "generation_error": null,
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          785
+        ],
+        "output_tokens": [
+          9
+        ]
+      }
+    },
+    {
+      "id": "company",
+      "legacy": {
+        "review": "retry_required_fact_matches_source",
+        "seconds": 54.18858125000001,
+        "generation_mode": "legacy_generated",
+        "generation_error": null,
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          1170
+        ],
+        "output_tokens": [
+          9
+        ]
+      },
+      "final": {
+        "review": "required_fact_matches_but_extra_citations",
+        "seconds": 69.89085944800001,
+        "generation_mode": "generated",
+        "generation_error": null,
+        "done_reasons": [
+          "stop"
+        ],
+        "prompt_tokens": [
+          1309
+        ],
+        "output_tokens": [
+          24
+        ]
+      }
+    }
+  ],
+  "legacy_sch_response_metadata_not_recorded": true
+}

@@ -200,6 +200,14 @@ def generate_answer(
         response = llm.invoke(prompt)
         answer = _normalize_answer(response.content)
         if answer:
+            if (
+                getattr(response, "response_metadata", {}).get("done_reason")
+                == "length"
+            ):
+                return (
+                    "출력 길이 제한으로 답변이 중단되었습니다.\n\n" + answer,
+                    "ollama_truncated",
+                )
             return answer, "ollama"
         return make_basic_answer(results), "extractive_fallback"
     except Exception as exc:
