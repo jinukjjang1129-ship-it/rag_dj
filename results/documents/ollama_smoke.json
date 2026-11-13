@@ -1,0 +1,12 @@
+{
+  "model": "gemma3:4b",
+  "runtime": "Ollama 0.40.16 CPU Docker",
+  "cloud_disabled": true,
+  "user_home_modified": false,
+  "response": "준비 완료.",
+  "elapsed_sec": 14.532944110000244,
+  "load_duration_ns": 12369004697,
+  "eval_count": 5,
+  "eval_duration_ns": 738098000,
+  "done": true
+}

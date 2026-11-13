@@ -1,0 +1,17 @@
+{
+  "observed_utc_date": "2026-11-11",
+  "main_refs_unchanged_from_original": {
+    "trump-tweets-topic-modeling": "3f9691081cac49badf26158f727d6a73de0659f8",
+    "rag_dj": "ecd10bdf6d8a93f12130c7fe2ca56bcd20696842",
+    "ocv__": "7407e2aa9e99d4d550b9ddf770248c7463e812f3"
+  },
+  "merged_pull_requests": false,
+  "new_public_repositories_created": false,
+  "tests": {
+    "trump": 9,
+    "ocv": 8,
+    "rag_including_sch": 38,
+    "total_unique": 55
+  },
+  "final_review_kst_date": "2026-11-13"
+}

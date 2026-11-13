@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import time
 from pathlib import Path
 
 from common import config
@@ -110,6 +111,7 @@ def detect_matching_papers(question: str, info_map: dict[str, dict]) -> list[str
 
 
 def answer(question: str, top_k: int = config.DEFAULT_TOP_K) -> dict:
+    started = time.perf_counter()
     info_map = _load_paper_keyword_map()
 
     # 논문이 아예 없거나(적재 전) 전부 키워드 추출에 실패한 경우엔 키워드
@@ -133,6 +135,43 @@ def answer(question: str, top_k: int = config.DEFAULT_TOP_K) -> dict:
             }
 
     where = {"source": {"$in": matched_sources}} if matched_sources else None
+
+    if (
+        matched_sources
+        and "키워드" in question
+        and any(word in question for word in ("목록", "나열", "알려"))
+        and not any(word in question for word in ("의미", "설명", "분석", "차이"))
+        and all(info_map[source]["keywords"] for source in matched_sources)
+    ):
+        # Keywords are already extracted metadata; generation can add unrelated terms.
+        sources = [
+            {
+                "rank": index + 1,
+                "title": source,
+                "score": None,
+                "score_type": "extracted_metadata",
+                "text": "; ".join(dict.fromkeys(info_map[source]["keywords"])),
+                "metadata": {"source": source, "field": "paper_keywords"},
+            }
+            for index, source in enumerate(sorted(matched_sources))
+        ]
+        elapsed = time.perf_counter() - started
+        return {
+            "question": question,
+            "answer": "적재 자료에서 추출된 키워드입니다.\n"
+            + "\n".join(f"{item['title']}\n{item['text']}" for item in sources),
+            "sources": sources,
+            "used_fallback": False,
+            "in_scope": True,
+            "matched_papers": matched_sources,
+            "generation_mode": "deterministic_metadata",
+            "route": "keyword_metadata",
+            "timing": {
+                "search_sec": elapsed,
+                "generate_sec": 0.0,
+                "total_sec": elapsed,
+            },
+        }
 
     result = engine.answer_question(
         DOMAIN,

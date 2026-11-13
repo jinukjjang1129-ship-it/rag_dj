@@ -159,6 +159,19 @@ def answer(
     question: str,
     top_k: int = config.DOMAINS["admission"].get("top_k", config.DEFAULT_TOP_K),
 ) -> dict:
+    if "전형료" in question:
+        # Fees live in a common table, not in a track's eligibility pages.
+        result = engine.answer_question(
+            DOMAIN,
+            question,
+            top_k,
+            where={"section": "전형료"},
+            scope_note="\n전형료 공통 표에서 질문에 해당하는 전형의 금액을 확인하세요.",
+            extra_scope_keywords=ADMISSION_KEYWORDS,
+        )
+        result["detected_track_filter"] = None
+        result["detected_sections"] = ["전형료"]
+        return result
     where, track_desc = detect_track_filter(question)
     sections: list[str] = []
 

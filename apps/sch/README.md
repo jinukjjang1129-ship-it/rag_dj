@@ -83,6 +83,8 @@ python evaluation/evaluate_sch.py --project apps/sch \
 
 ## 검증 한계와 후속 과제
 
-실제 한국어 임베딩 로드·Chroma 검색·학과/입시 적재·Streamlit 브라우저 실행을 확인했습니다. Ollama 서버가 없어 `gemma3:4b` 답변 정확도와 전체 응답 지연은 측정하지 않았습니다. `USE_OLLAMA=0`의 추출식 fallback 결과를 LLM의 성능으로 세지 않습니다. Neo4j는 PDF 파싱과 API의 fixture 테스트를 수행했으며 실서버 적재·질의는 검증하지 않았습니다.
+실제 한국어 임베딩·Chroma·자료 적재·Streamlit 실행을 확인했습니다. 후속 검증에서 별도 로컬 Ollama CPU 생성과 Neo4j 5.26.0 실제 적재·API 질의를 실행했습니다. 21개 전형의 출처를 보존했고 목록 8개와 SW융합전형 모집인원 8명 조회를 확인했습니다. 원본 운영 DB 연결은 실패했으므로 그 환경의 재현으로 표시하지 않습니다. [실제 생성 검증](../../docs/generation-validation.md)은 검색 지표와 구분합니다.
+
+![새 로컬 Neo4j와 연결한 실제 화면](../../results/sch/live_graph_system.png)
 
 후속 과제는 별도 미사용 평가셋, 목록의 외부 정답 검수, 검색 점수 임곗값 보정, 긴 텍스트의 임베딩 잘림, 논문 주제 필터의 미사용 질문 평가, PDF 표 원문 대조 및 실제 생성 평가입니다.

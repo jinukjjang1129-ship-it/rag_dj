@@ -1,3 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "multi-domain-rag-system"
+version = "0.1.0"
+requires-python = ">=3.11"
+dynamic = ["dependencies"]
+[project.scripts]
+document-rag = "document_rag.cli:main"
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+[tool.setuptools.packages.find]
+where = ["src"]
 [tool.ruff]
 line-length = 88
 target-version = "py312"
@@ -8,5 +22,5 @@ ignore = ["E501"]
 "apps/sch/ingest/*.py" = ["E402"]
 "apps/sch/graph_demo/app.py" = ["E402"]
 [tool.pytest.ini_options]
-pythonpath = ["apps/sch"]
+pythonpath = ["apps/sch", "src", "."]
 testpaths = ["tests"]

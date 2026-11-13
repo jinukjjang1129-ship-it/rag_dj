@@ -223,3 +223,55 @@ def test_paper_filename_recovers_topic_when_title_is_bad():
     mapping = {source: {"title": "Journal Volume", "keywords": ["Vulnerability"]}}
     assert detect_matching_papers("웹 취약점 관련 논문", mapping) == [source]
     assert detect_matching_papers("양자 중력 연구", mapping) == []
+
+
+def test_track_fee_question_uses_common_fee_table(monkeypatch):
+    from rag import admission
+
+    captured = {}
+
+    def answer_stub(*args, **kwargs):
+        captured.update(kwargs)
+        return {"answer": "fixture", "sources": []}
+
+    monkeypatch.setattr(engine, "answer_question", answer_stub)
+    result = admission.answer("SW융합전형 전형료는 얼마인가요?")
+    assert captured["where"] == {"section": "전형료"}
+    assert result["detected_sections"] == ["전형료"]
+
+
+def test_truncated_model_output_is_not_marked_complete(monkeypatch):
+    monkeypatch.setattr(config, "USE_OLLAMA", True)
+    response = SimpleNamespace(
+        content="unfinished", response_metadata={"done_reason": "length"}
+    )
+    monkeypatch.setattr(
+        engine, "_get_llm", lambda: SimpleNamespace(invoke=lambda _: response)
+    )
+    text, mode = engine.generate_answer(
+        "안내", "질문", [{"rank": 1, "title": "제목", "text": "근거"}]
+    )
+    assert mode == "ollama_truncated"
+    assert "중단" in text
+
+
+def test_paper_keyword_list_preserves_metadata_without_generation(monkeypatch):
+    from rag import paper
+
+    monkeypatch.setattr(
+        paper,
+        "_load_paper_keyword_map",
+        lambda: {
+            "HTTP study.pdf": {
+                "title": "HTTP study",
+                "keywords": ["HTTP", "Cloud", "HTTP"],
+            }
+        },
+    )
+    monkeypatch.setattr(
+        engine, "answer_question", lambda *a, **kw: pytest.fail("no generation")
+    )
+    result = paper.answer("HTTP 논문 키워드를 알려주세요")
+    assert result["generation_mode"] == "deterministic_metadata"
+    assert result["sources"][0]["text"] == "HTTP; Cloud"
+    assert result["sources"][0]["metadata"]["source"] == "HTTP study.pdf"

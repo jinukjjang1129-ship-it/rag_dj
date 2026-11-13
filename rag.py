@@ -1,131 +1,149 @@
-"""
-rag.py — 검색 + 생성. 동진쎄미켐 페이지 요약/질의응답용.
+"""Company question routing with explicit scopes and evidence provenance."""
 
-저번(규정 조항 찾기)과 다른 점:
-- 질문이 "사업분야 10줄 요약" 같은 '요약형'이 많다.
-- 그래서 ① 카테고리 우선 검색 ② 요약 지시를 잘 따르는 프롬프트를 쓴다.
-- 'N줄로' 같은 길이 지정도 프롬프트로 전달한다.
+from __future__ import annotations
 
-환각 억제:
-- 페이지 본문에 있는 내용만 사용. 없으면 "찾을 수 없습니다".
-"""
-import os
-import re
-from typing import List, Dict, Any
+from functools import lru_cache
+from pathlib import Path
 
-from langchain_chroma import Chroma
-from langchain_core.documents import Document
+from config import (
+    COL_DOCS,
+    LOCAL_LLM_MODEL,
+    PERSIST_DOCS,
+    embedding_signature,
+    get_embeddings,
+    get_llm,
+)
+from document_rag.retrieval import answer as grounded_answer
+from document_rag.retrieval import open_index
 
-from config import (PERSIST_DOCS, COL_DOCS, get_embeddings, get_llm)
+BUSINESS = [
+    "반도체 (사업분야)",
+    "디스플레이 (사업분야)",
+    "신재생에너지 (사업분야)",
+    "발포제 (사업분야)",
+]
+HINTS = {
+    "반도체": "반도체 (사업분야)",
+    "디스플레이": "디스플레이 (사업분야)",
+    "신재생": "신재생에너지 (사업분야)",
+    "이차전지": "신재생에너지 (사업분야)",
+    "연료전지": "신재생에너지 (사업분야)",
+    "발포제": "발포제 (사업분야)",
+    "회사개요": "회사개요",
+    "소개": "회사개요",
+    "CEO": "CEO인사말 (회사소개)",
+    "인사말": "CEO인사말 (회사소개)",
+    "사업장": "사업장 소개 (회사소개)",
+    "찾아오시는": "찾아오시는길 (회사소개)",
+    "위치": "찾아오시는길 (회사소개)",
+    "윤리경영": "윤리경영 (지속가능경영)",
+    "혁신경영": "혁신경영 (지속가능경영)",
+    "환경안전": "환경안전 (지속가능경영)",
+    "ESG": "ESG 정보공개 (지속가능경영)",
+    "IR공고": "IR공고 (IR/PR)",
+    "공시": "공시정보 (IR/PR)",
+    "공지사항": "공지사항 (IR/PR)",
+    "회사소식": "회사소식 (IR/PR)",
+    "홍보영상": "홍보영상 (IR/PR)",
+    "Q&A": "Q&A (IR/PR)",
+    "채용": "동진HR (채용정보)",
+    "인재상": "동진HR (채용정보)",
+}
+BUSINESS_GROUP_HINTS = [
+    "사업분야",
+    "사업 분야",
+    "무슨 사업",
+    "어떤 사업",
+    "사업영역",
+    "사업 영역",
+]
 
-DEFAULT_K = 4
 
-SYSTEM_PROMPT = """너는 동진쎄미켐 회사 정보를 안내하는 도우미다.
-
-규칙:
-- 아래 [참고 자료]에 있는 내용만으로 답한다. 자료 밖 지식·추측은 금지.
-- 자료에 근거가 없으면: "제공된 자료에서 해당 내용을 찾을 수 없습니다." 라고만 답한다.
-- 한국어 존댓말로, 정확하고 담백하게 정리한다.
-- 사용자가 'N줄로' 또는 '몇 줄로' 요약을 요청하면 그 줄 수에 맞춰 답한다.
-- 나열이 필요하면 간결한 문장으로 정리한다."""
-
-
-def load_vectordb() -> Chroma:
-    if not os.path.isdir(PERSIST_DOCS):
-        raise FileNotFoundError(
-            f"벡터DB가 없습니다: {PERSIST_DOCS}\n"
-            f"먼저 'python ingest.py' 로 pages.json 을 적재하세요."
-        )
-    return Chroma(
-        collection_name=COL_DOCS,
-        persist_directory=PERSIST_DOCS,
+@lru_cache(maxsize=1)
+def load_vectordb():
+    if not Path(PERSIST_DOCS).exists():
+        raise FileNotFoundError("Company index is missing; run python ingest.py")
+    return open_index(
+        Path(PERSIST_DOCS),
+        COL_DOCS,
+        model=embedding_signature(),
         embedding_function=get_embeddings(),
     )
 
 
-def detect_line_request(query: str) -> str:
-    """'10줄로' 같은 길이 요청을 추출해 프롬프트에 강조로 넣기."""
-    m = re.search(r"(\d+)\s*줄", query)
-    if m:
-        return f"\n\n[요청 형식] 반드시 약 {m.group(1)}줄로 요약해서 답하세요."
-    return ""
-
-
-def retrieve(vectordb: Chroma, query: str, k: int) -> List[Document]:
-    """
-    카테고리 힌트가 질문에 있으면 그 카테고리를 우선 검색.
-    (예: '반도체' 포함 → 반도체 페이지 우선)
-    """
-    hints = {
-        "반도체": "반도체 (사업분야)",
-        "디스플레이": "디스플레이 (사업분야)",
-        "신재생": "신재생에너지 (사업분야)",
-        "이차전지": "신재생에너지 (사업분야)",
-        "연료전지": "신재생에너지 (사업분야)",
-        "배터리": "신재생에너지 (사업분야)",
-        "발포제": "발포제 (사업분야)",
-        "회사": "회사개요",
-        "개요": "회사개요",
-        "소개": "회사개요",
-    }
-    matched = None
-    for kw, cat in hints.items():
-        if kw in query:
-            matched = cat
-            break
-
-    if matched:
-        # 해당 카테고리로 필터 검색
-        docs = vectordb.similarity_search(query, k=k, filter={"category": matched})
-        if docs:
-            return docs
-    # 힌트 없거나 결과 없으면 전체 검색
-    return vectordb.similarity_search(query, k=k)
-
-
-def format_context(docs: List[Document]) -> str:
-    blocks = []
-    for i, d in enumerate(docs, start=1):
-        cat = d.metadata.get("category", "")
-        head = f"[자료{i} | {cat}]"
-        blocks.append(f"{head}\n{d.page_content}")
-    return "\n\n---\n\n".join(blocks)
-
-
-def sources_of(docs: List[Document]) -> List[str]:
-    seen = []
-    for d in docs:
-        cat = d.metadata.get("category", "?")
-        src = d.metadata.get("source", "")
-        label = f"{cat}  ({src})"
-        if label not in seen:
-            seen.append(label)
-    return seen
-
-
-def answer(query: str, k: int = DEFAULT_K) -> Dict[str, Any]:
-    vectordb = load_vectordb()
-    docs = retrieve(vectordb, query, k=k)
-
-    if not docs:
-        return {"answer": "제공된 자료에서 해당 내용을 찾을 수 없습니다.",
-                "sources": [], "contexts": []}
-
-    context = format_context(docs)
-    line_req = detect_line_request(query)
-    llm = get_llm(temperature=0.2)
-
-    prompt = f"""{SYSTEM_PROMPT}
-
-[참고 자료]
-{context}
-
-[질문]
-{query}{line_req}
-
-[답변]"""
-
-    resp = llm.invoke(prompt)
-    text = (getattr(resp, "content", None) or str(resp)).strip()
-
-    return {"answer": text, "sources": sources_of(docs), "contexts": docs}
+def answer(query: str, k: int = 4, generate: bool = True) -> dict:
+    scope_terms = tuple(HINTS) + (
+        "동진",
+        "회사",
+        "기업",
+        "제품",
+        "사업",
+        "경영",
+        "설립",
+        "연혁",
+        "대표",
+        "연구개발",
+        "문의",
+        "재무",
+        "매출",
+        "투자",
+        "품질",
+        "복리후생",
+    )
+    if not any(term.casefold() in query.casefold() for term in scope_terms):
+        return {
+            "answer": "기업정보 자료 범위에서 확인할 질문을 입력해 주세요.",
+            "sources": [],
+            "source_details": [],
+            "contexts": [],
+            "generation_mode": "abstain",
+        }
+    database = load_vectordb()
+    broad = any(hint in query for hint in BUSINESS_GROUP_HINTS) and not any(
+        kw in query
+        for kw in ("반도체", "디스플레이", "신재생", "이차전지", "연료전지", "발포제")
+    )
+    if broad and any(word in query for word in ("전체", "목록", "종류", "어떤")):
+        got = database.get(where={"category": {"$in": BUSINESS}}, include=["metadatas"])
+        sources = {(meta["category"], meta["source"]) for meta in got["metadatas"]}
+        return {
+            "answer": "적재 자료에서 확인한 사업분야입니다.\n"
+            + "\n".join(f"- {c}" for c in sorted({c for c, _ in sources})),
+            "sources": [f"{c}: {u}" for c, u in sorted(sources)],
+            "contexts": [],
+            "generation_mode": "deterministic_metadata",
+        }
+    categories = [
+        category
+        for keyword, category in HINTS.items()
+        if keyword.casefold() in query.casefold()
+    ]
+    where = {"category": {"$in": sorted(set(categories))}} if categories else None
+    evidence = None
+    if broad:
+        query_embedding = database._embedding_function.embed_query(query)
+        evidence = [
+            (doc, None)
+            for category in BUSINESS
+            for doc in database.similarity_search_by_vector(
+                query_embedding,
+                k=max(1, k // len(BUSINESS)),
+                filter={"category": category},
+            )
+        ]
+    result = grounded_answer(
+        database,
+        query,
+        where=where,
+        generate=generate,
+        k=k,
+        evidence=evidence,
+        llm_model=LOCAL_LLM_MODEL,
+        llm=get_llm(temperature=0) if generate else None,
+    )
+    result["source_details"] = result["sources"]
+    result["sources"] = [
+        f"{s.get('category', '')}: {s['source']}" for s in result["source_details"]
+    ]
+    result["contexts"] = result["source_details"]
+    return result

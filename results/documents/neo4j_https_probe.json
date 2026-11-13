@@ -1,0 +1,16 @@
+{
+  "purpose": "read-only HTTPS fallback for supplied Neo4j endpoint",
+  "credentials_published": false,
+  "writes_performed": false,
+  "attempts": [
+    {
+      "api": "/db/neo4j/query/v2",
+      "error_type": "ConnectionError"
+    },
+    {
+      "api": "/db/neo4j/tx/commit",
+      "error_type": "ConnectionError"
+    }
+  ],
+  "endpoint_is_loopback": true
+}

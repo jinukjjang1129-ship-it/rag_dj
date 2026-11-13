@@ -1,0 +1,336 @@
+{
+  "protocol": "same raw PDF/pages and fixed questions; legacy PDF indentation repaired only; no LLM generation",
+  "employment": {
+    "legacy": {
+      "questions": 10,
+      "heading_hit_rate": 0.1,
+      "page_evidence_rate": 0,
+      "latency_median_sec": 0.0486518719999367,
+      "rows": [
+        {
+          "id": "article-1",
+          "kind": "exact",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.0500160669998877
+        },
+        {
+          "id": "article-5",
+          "kind": "exact",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.048503790999347984
+        },
+        {
+          "id": "article-7",
+          "kind": "exact",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.05345243699957791
+        },
+        {
+          "id": "article-8",
+          "kind": "exact",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.04954004200044437
+        },
+        {
+          "id": "article-12",
+          "kind": "exact",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.04872704399986105
+        },
+        {
+          "id": "topic-0",
+          "kind": "semantic",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.04806442800054356
+        },
+        {
+          "id": "topic-1",
+          "kind": "semantic",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.05288505200041982
+        },
+        {
+          "id": "topic-2",
+          "kind": "semantic",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.04636849500002427
+        },
+        {
+          "id": "topic-3",
+          "kind": "semantic",
+          "heading_hit": true,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.04759359400031826
+        },
+        {
+          "id": "topic-4",
+          "kind": "semantic",
+          "heading_hit": false,
+          "has_page_evidence": false,
+          "retrieved": 1,
+          "latency_median_sec": 0.04857670000001235
+        }
+      ]
+    },
+    "current": {
+      "questions": 10,
+      "heading_hit_rate": 0.8,
+      "page_evidence_rate": 1,
+      "latency_median_sec": 0.02857452300031582,
+      "rows": [
+        {
+          "id": "article-1",
+          "kind": "exact",
+          "heading_hit": true,
+          "has_page_evidence": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.0013218399999459507
+        },
+        {
+          "id": "article-5",
+          "kind": "exact",
+          "heading_hit": true,
+          "has_page_evidence": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.0010088249991895282
+        },
+        {
+          "id": "article-7",
+          "kind": "exact",
+          "heading_hit": true,
+          "has_page_evidence": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.0009834450002017547
+        },
+        {
+          "id": "article-8",
+          "kind": "exact",
+          "heading_hit": true,
+          "has_page_evidence": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.0009230760006175842
+        },
+        {
+          "id": "article-12",
+          "kind": "exact",
+          "heading_hit": true,
+          "has_page_evidence": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.0009249550003005425
+        },
+        {
+          "id": "topic-0",
+          "kind": "semantic",
+          "heading_hit": true,
+          "has_page_evidence": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.05582720600068569
+        },
+        {
+          "id": "topic-1",
+          "kind": "semantic",
+          "heading_hit": true,
+          "has_page_evidence": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.10224374599965813
+        },
+        {
+          "id": "topic-2",
+          "kind": "semantic",
+          "heading_hit": false,
+          "has_page_evidence": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.08707610100009333
+        },
+        {
+          "id": "topic-3",
+          "kind": "semantic",
+          "heading_hit": true,
+          "has_page_evidence": true,
+          "retrieved": 5,
+          "latency_median_sec": 0.09074769400012883
+        },
+        {
+          "id": "topic-4",
+          "kind": "semantic",
+          "heading_hit": false,
+          "has_page_evidence": true,
+          "retrieved": 5,
+          "latency_median_sec": 0.08849771299992426
+        }
+      ]
+    }
+  },
+  "company": {
+    "legacy": {
+      "questions": 10,
+      "source_hit_rate": 1,
+      "business_category_coverage": 1.0,
+      "latency_median_sec": 0.08424484750003103,
+      "rows": [
+        {
+          "id": "company-0",
+          "source_hit": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.0859362979999787
+        },
+        {
+          "id": "company-1",
+          "source_hit": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.07211594599993987
+        },
+        {
+          "id": "company-2",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.0860897170005046
+        },
+        {
+          "id": "company-3",
+          "source_hit": true,
+          "retrieved": 4,
+          "latency_median_sec": 0.08513419300015812
+        },
+        {
+          "id": "company-4",
+          "source_hit": true,
+          "retrieved": 2,
+          "latency_median_sec": 0.08223211099993932
+        },
+        {
+          "id": "company-5",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08398305799983063
+        },
+        {
+          "id": "company-6",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08642964899991057
+        },
+        {
+          "id": "company-7",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08450663700023142
+        },
+        {
+          "id": "company-8",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08354806199986342
+        },
+        {
+          "id": "company-9",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08339065999916784
+        }
+      ]
+    },
+    "current": {
+      "questions": 10,
+      "source_hit_rate": 1,
+      "business_category_coverage": 1.0,
+      "latency_median_sec": 0.0850335664999875,
+      "rows": [
+        {
+          "id": "company-0",
+          "source_hit": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.08741593899958389
+        },
+        {
+          "id": "company-1",
+          "source_hit": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.07171550400016713
+        },
+        {
+          "id": "company-2",
+          "source_hit": true,
+          "retrieved": 2,
+          "latency_median_sec": 0.0831860960006452
+        },
+        {
+          "id": "company-3",
+          "source_hit": true,
+          "retrieved": 4,
+          "latency_median_sec": 0.08521377399938501
+        },
+        {
+          "id": "company-4",
+          "source_hit": true,
+          "retrieved": 3,
+          "latency_median_sec": 0.08913769599985244
+        },
+        {
+          "id": "company-5",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08485335900058999
+        },
+        {
+          "id": "company-6",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.10117814600016573
+        },
+        {
+          "id": "company-7",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08482990700031223
+        },
+        {
+          "id": "company-8",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08533896900007676
+        },
+        {
+          "id": "company-9",
+          "source_hit": true,
+          "retrieved": 1,
+          "latency_median_sec": 0.08443758099929255
+        }
+      ]
+    }
+  },
+  "llm_accuracy": null,
+  "syntax_repair_required_for_legacy_employment": true,
+  "raw_sources_published": false,
+  "unrelated_evidence_checks": {
+    "employment_legacy_returned": 3,
+    "employment_current_returned": 1,
+    "company_legacy_returned": 3,
+    "company_current_returned": 0,
+    "questions": 3,
+    "meaning": "Evidence presence for unrelated queries; not generated-answer accuracy"
+  },
+  "chunk_counts": {
+    "employment_legacy": 133,
+    "employment_current": 96,
+    "company_legacy": 27,
+    "company_current": 33
+  }
+}

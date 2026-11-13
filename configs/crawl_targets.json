@@ -1,0 +1,78 @@
+[
+  {
+    "url": "https://www.dongjin.com/company/greeting02.php",
+    "category": "CEO인사말 (회사소개)"
+  },
+  {
+    "url": "https://www.dongjin.com/company/overview.php",
+    "category": "회사개요"
+  },
+  {
+    "url": "https://www.dongjin.com/company/be_domestic.php",
+    "category": "사업장 소개 (회사소개)"
+  },
+  {
+    "url": "https://www.dongjin.com/company/location.php",
+    "category": "찾아오시는길 (회사소개)"
+  },
+  {
+    "url": "https://www.dongjin.com/business/display.php",
+    "category": "디스플레이 (사업분야)"
+  },
+  {
+    "url": "https://www.dongjin.com/business/semiconductor.php",
+    "category": "반도체 (사업분야)"
+  },
+  {
+    "url": "https://www.dongjin.com/business/renewableenergy.php",
+    "category": "신재생에너지 (사업분야)"
+  },
+  {
+    "url": "https://www.dongjin.com/business/foamagen.php",
+    "category": "발포제 (사업분야)"
+  },
+  {
+    "url": "https://www.dongjin.com/company/system.php",
+    "category": "윤리경영 (지속가능경영)"
+  },
+  {
+    "url": "https://www.dongjin.com/company/quality_vision.php",
+    "category": "혁신경영 (지속가능경영)"
+  },
+  {
+    "url": "https://www.dongjin.com/sustainable/energy.php",
+    "category": "환경안전 (지속가능경영)"
+  },
+  {
+    "url": "https://www.dongjin.com/sustainable/esg.php",
+    "category": "ESG 정보공개 (지속가능경영)"
+  },
+  {
+    "url": "https://www.dongjin.com/investment/announcement.php",
+    "category": "IR공고 (IR/PR)"
+  },
+  {
+    "url": "https://www.dongjin.com/investment/information.php",
+    "category": "공시정보 (IR/PR)"
+  },
+  {
+    "url": "https://www.dongjin.com/promotion/notice.php",
+    "category": "공지사항 (IR/PR)"
+  },
+  {
+    "url": "https://www.dongjin.com/promotion/news.php",
+    "category": "회사소식 (IR/PR)"
+  },
+  {
+    "url": "https://www.dongjin.com/promotion/video_com.php",
+    "category": "홍보영상 (IR/PR)"
+  },
+  {
+    "url": "https://www.dongjin.com/promotion/qna.php",
+    "category": "Q&A (IR/PR)"
+  },
+  {
+    "url": "https://www.dongjin.com/recruit/hr01.php",
+    "category": "동진HR (채용정보)"
+  }
+]
